@@ -1,0 +1,14 @@
+# build output
+target/
+
+# generated test reports
+reports/
+test-output/
+
+# editor settings with paths specific to my computer
+.vscode/
+.idea/
+*.iml
+
+# personal notes
+notes.md
