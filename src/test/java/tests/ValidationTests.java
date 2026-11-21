@@ -58,7 +58,7 @@ public class ValidationTests extends BaseTest {
 
     @Test(description = "A very long title (200 characters) is accepted")
     public void textNote_longTitle_isAccepted() {
-        String longTitle = "L".repeat(200);
+        String longTitle = "s".repeat(200);
 
         NotesListPage list = home().createTextNote(longTitle, "boundary");
 

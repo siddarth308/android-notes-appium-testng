@@ -66,7 +66,7 @@ public class EditDeleteTests extends BaseTest {
 
     @Test(description = "Rename a todo list and add items: same list is updated")
     public void editTodoList_renameAndAddItems() {
-        NotesListPage list = home().createTodoList("Errands", "Post office");
+        NotesListPage list = home().createTodoList("Errands", "office work");
 
         list.openTodoList("Errands")
                 .enterTitle("Errands v2")
@@ -77,7 +77,7 @@ public class EditDeleteTests extends BaseTest {
         assertTrue(list.waitForNote("Errands v2"));
         assertFalse(list.hasNote("Errands"));
         assertEquals(list.count(), 1, "Edit must not duplicate the list");
-        assertEquals(list.openTodoList("Errands v2").items(), List.of("Post office", "Bank", "Pharmacy"));
+        assertEquals(list.openTodoList("Errands v2").items(), List.of("office work", "Bank", "Pharmacy"));
     }
 
     @Test(description = "Changing checked states of a saved list is saved")

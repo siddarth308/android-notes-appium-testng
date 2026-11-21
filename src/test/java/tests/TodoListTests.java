@@ -60,7 +60,7 @@ public class TodoListTests extends BaseTest {
         todo.check("Buy maggi").check("Pay rent");
 
         assertTrue(todo.isChecked("Buy maggi"));
-        assertFalse(todo.isChecked("Call plumber"));
+        assertFalse(todo.isChecked("Call vishal"));
         assertTrue(todo.isChecked("Pay rent"));
     }
 
