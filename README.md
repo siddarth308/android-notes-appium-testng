@@ -159,7 +159,7 @@ These tests are tagged `known-defect`. They fail on purpose, because they show s
 | `sortByTitle_ignoresCase` | "Sort by Title" treats capital and small letters differently. You get `Mango, Zebra, apple` instead of `apple, Mango, Zebra`. |
 | `longTodoList_tickDoesNotJumpToOtherItems` | In a long list (I used 25 items), ticking Item 1 mixes up the rows. Other items show as ticked, and some rows show the wrong text. It only happens when the list is longer than the screen. |
 
-In a full run I expect about 41 or 42 tests to pass and 5 or 6 to fail, and the failures should only be the ones in this table. The exact number can change because `filter_staysOnAfterAddingNote` is intermittent.
+In a full run I expect about  40 passes and 7 failures, and the failures should only be the ones in this table. The exact number can change because `filter_staysOnAfterAddingNote` is intermittent.
 
 ---
 
