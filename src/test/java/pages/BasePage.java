@@ -64,4 +64,9 @@ public class BasePage {
     public void pressBack() {
         driver.navigate().back();
     }
+
+    // phone orientation
+    public void rotateTo(ScreenOrientation orientation) {
+        driver.rotate(orientation);
+    }
 }

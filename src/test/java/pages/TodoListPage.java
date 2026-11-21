@@ -96,7 +96,54 @@ public class TodoListPage extends BasePage {
         return new NotesListPage(driver).waitUntilLoaded();
     }
 
-    /** Filled in at Stage 6. */
+    // For long lists. addItem() waits for the row count to go up by one, but once
+    // the list is taller than the screen only the visible rows exist, so the count
+    // stops growing. Here we just wait for the "Add new item" box to clear instead.
+    public TodoListPage addManyItems(String... items) {
+        for (String text : items) {
+            type(newItemField, text);
+            tap(addButton);
+            wait.until(d -> newItemFieldValue().isEmpty());
+        }
+        return this;
+    }
+
+    private void swipeList(String direction) {
+        Dimension screen = driver.manage().window().getSize();
+        driver.executeScript("mobile: swipeGesture", java.util.Map.of(
+                "left", screen.width / 4,
+                "top", screen.height / 4,
+                "width", screen.width / 2,
+                "height", screen.height / 2,
+                "direction", direction,
+                "percent", 0.75));
+    }
+
+    // finger moves up, so the list moves down to show later items
+    public void scrollDown() {
+        swipeList("up");
+    }
+
+    public void scrollUp() {
+        swipeList("down");
+    }
+
+    // item text - checked, for only the rows that are on screen right now
+    public java.util.Map<String, Boolean> checkedStatesOnScreen() {
+        java.util.Map<String, Boolean> result = new java.util.LinkedHashMap<>();
+        for (WebElement row : driver.findElements(itemTexts)) {
+            try {
+                WebElement box = row.findElement(AppiumBy.xpath(
+                        "preceding-sibling::*[@resource-id='com.example.myapp:id/todoCheckBox']"));
+                result.put(row.getText(), Boolean.parseBoolean(box.getAttribute("checked")));
+            } catch (NoSuchElementException | StaleElementReferenceException ignored) {
+                // row scrolled away while we were reading it, skip it
+            }
+        }
+        return result;
+    }
+
+   
     public boolean hasTitleError() {
         return false;
     }

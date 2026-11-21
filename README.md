@@ -1,26 +1,24 @@
 # android-notes-appium-testng
-Mobile UI test automation for an Android Notes app using Appium (UiAutomator2), Selenium 4, Java and TestNG, with the Page Object Model, independent tests and ExtentReports HTML reporting.
-## License
-The test automation code is licensed under the [MIT License](LICENSE).
-The application under test (`app-debug.apk`) is not covered by this license and belongs to its owner.
 
+This is my UI test automation project for a simple Android Notes app (`com.example.myapp`). I wrote it with Appium (UiAutomator2), Selenium 4, Java and TestNG, using the Page Object Model. Every run produces an HTML report made with ExtentReports.
 
-# android-notes-appium-testng
+The app lets you create text notes and to-do lists, edit them, filter and sort the list. There are **47 test cases** (44 test methods, and 3 of them run twice with different data) that cover:
 
-Mobile UI test automation for an Android Notes app (`com.example.myapp`) using
-**Appium (UiAutomator2), Selenium 4, Java and TestNG**, with the Page Object Model,
-independent tests and an ExtentReports HTML report.
+- creating, editing and deleting text notes and to-do lists
+- ticking and unticking to-do items
+- input checks, like empty titles and extra spaces
+- filtering and sorting
+- a few awkward things a real user might do, like rotating the phone or tapping Save twice
 
-**41 test cases** (38 test methods, 3 of them data-driven) covering creating, editing and
-deleting text notes and to-do lists, checklist states, input validation, filtering and sorting.
+While writing the tests I found a few bugs in the app itself. They are listed in [Bugs I found in the app](#bugs-i-found-in-the-app).
 
 ---
 
-## Tech stack
+## What you need
 
-| Tool | Version |
+| Tool | Version I used |
 |---|---|
-| Java (JDK) | 17 or newer (tested with 23) |
+| Java (JDK) | 17 or newer (I tested with 23) |
 | Maven | 3.9+ |
 | Node.js | 18+ |
 | Appium server | 2.x |
@@ -29,158 +27,156 @@ deleting text notes and to-do lists, checklist states, input validation, filteri
 | Appium java-client | 9.3.0 |
 | TestNG | 7.10.2 |
 | ExtentReports | 5.1.2 |
-| Android SDK / emulator | API 35 (Android 15) |
+| Android emulator | API 35 (Android 15) |
 
 ---
 
-## One-time setup
+## Setting it up (only once)
 
-1. Install **JDK 17+**, **Maven**, **Node.js** and **Android Studio**.
-2. Set `ANDROID_HOME` (e.g. `C:\Users\<you>\AppData\Local\Android\Sdk`) and add
-   `%ANDROID_HOME%\platform-tools` to `PATH`.
+1. Install the JDK, Maven, Node.js and Android Studio.
+2. Set `ANDROID_HOME` (for me it's `C:\Users\<you>\AppData\Local\Android\Sdk`) and add `%ANDROID_HOME%\platform-tools` to your `PATH`.
 3. Install Appium and the Android driver:
    ```
    npm install -g appium@2
    appium driver install uiautomator2@3.10.0
    ```
-   > The newest UiAutomator2 driver (4.x) needs Appium 3. With Appium 2, use 3.10.0.
-4. In Android Studio → **Device Manager**, create an emulator (e.g. *Medium Phone, API 35*).
-5. Clone this repo:
+   The newest UiAutomator2 driver (4.x) only works with Appium 3, so with Appium 2 you have to use 3.10.0.
+4. In Android Studio, open **Device Manager** and create an emulator (I used *Medium Phone, API 35*).
+5. Clone the repo:
    ```
    git clone https://github.com/siddarth308/android-notes-appium-testng.git
    cd android-notes-appium-testng
    ```
-6. Make sure the app is at `app/app-debug.apk`.
+6. Check that the app file is at `app/app-debug.apk`.
 
 ---
 
-## How to run
+## Running the tests
 
-You need **three terminals**.
+You need three terminals open.
 
 **Terminal 1: start the emulator**
 ```
 "%ANDROID_HOME%\emulator\emulator.exe" -avd Medium_Phone_API_35
 ```
-Wait until the home screen appears, then check it's connected:
+Wait for the home screen, then check it's connected:
 ```
 adb devices
 ```
-It must show `emulator-5554    device`.
+You should see `emulator-5554    device`.
 
-**Terminal 2: start Appium** (leave it running)
+**Terminal 2: start Appium** and leave it running
 ```
 appium
 ```
-Wait for `Appium REST http interface listener started on http://0.0.0.0:4723`.
+Wait until it prints `Appium REST http interface listener started on http://0.0.0.0:4723`.
 
-**Terminal 3: run the tests** (from the project folder)
+**Terminal 3: run the tests** from the project folder
 ```
 mvn clean test
 ```
-The full suite takes about 10 minutes. Keep the emulator and Appium open and don't let
-the PC sleep, or the session dies and the remaining tests are skipped.
 
-### Other ways to run
+A full run takes roughly 15 to 20 minutes. Keep the emulator and Appium open, and don't let the laptop go to sleep. If it does, the Appium session dies and all the remaining tests get skipped (this happened to me once).
+
+If you don't want to run everything:
 
 | What | Command |
 |---|---|
-| Whole suite (`testng.xml`) | `mvn clean test` |
+| Whole suite | `mvn clean test` |
 | One class | `mvn test -Dtest=TodoListTests` |
 | One test | `mvn test -Dtest=TodoListTests#checkItems_showsCheckedState` |
-| From VS Code | Click ▶ next to a `@Test` method |
+| From VS Code | Click the ▶ next to a `@Test` method |
 
 ---
 
-## Test report
+## The report
 
-After a run, open:
+When a run finishes, open this file in your browser:
 ```
 reports\NotesAppReport.html
 ```
-It shows every test with pass/fail status, description and category, plus the error and a
-**screenshot of the screen** for each failure. TestNG's own results are in `target/surefire-reports/`.
+It lists every test with its result and description. For each failure it shows the error and a screenshot of what was on screen. Each run overwrites the previous report, so copy it somewhere if you want to keep it. TestNG's own results are in `target/surefire-reports/`.
 
 ---
 
-## Project structure
+## How the project is laid out
 
 ```
 android-notes-appium-testng
 ├── app/
-│   └── app-debug.apk              App under test
+│   └── app-debug.apk              the app being tested
 ├── src/test/java/
 │   ├── base/
-│   │   └── BaseTest.java          Starts the Appium session; clears app data before every test
-│   ├── pages/                     Page Object Model: one class per screen
-│   │   ├── BasePage.java          Shared helpers: waits, tap, type, hide keyboard
-│   │   ├── NotesListPage.java     Notes list, + button, create dialog, ⋮ menu
-│   │   ├── TextNotePage.java      Text note editor
-│   │   └── TodoListPage.java      To-do list editor, items, checkboxes
-│   ├── tests/                     Test classes: only steps and assertions
+│   │   └── BaseTest.java          starts Appium and clears the app before every test
+│   ├── pages/                     one class per screen (Page Object Model)
+│   │   ├── BasePage.java          shared helpers: waits, tap, type, hide keyboard, rotate
+│   │   ├── NotesListPage.java     notes list, + button, create dialog, ⋮ menu
+│   │   ├── TextNotePage.java      text note editor
+│   │   └── TodoListPage.java      to-do editor, items, checkboxes, scrolling
+│   ├── tests/                     the tests, only steps and checks
 │   └── reporting/
-│       └── TestListener.java      ExtentReports HTML + screenshot on failure
-├── testng.xml                     Test suite definition
-└── pom.xml                        Dependencies and Maven config
+│       └── TestListener.java      builds the HTML report and takes screenshots on failure
+├── testng.xml                     which test classes make up the suite
+└── pom.xml                        dependencies and Maven setup
 ```
 
 ---
 
-## Test coverage (41 test cases)
+## What the tests cover
 
 | Class | Tests | What it checks |
 |---|---|---|
-| `TextNoteTests` | 3 | Create a text note; title, type and preview shown in list; content restored on reopen; note survives app restart |
-| `TodoListTests` | 8 | Multiple items added in order and unchecked; list shown as TODO with preview; items restored on reopen; check / uncheck items; checked state saved and survives app restart; preview shows first 3 items only |
-| `EditDeleteTests` | 9 | Edit note in place (no duplicate); edited note moves to top; Back discards changes; clear content; rename list and add items; change checked states; delete note; delete to-do item |
-| `ValidationTests` | 14 | Empty / spaces-only title rejected with **"Title cannot be empty"** for notes and lists (data-driven); fixing the title lets you save; trimming; 200-char title; duplicate titles; blank to-do items ignored; empty list saved as `[Empty Todo List]`; Back creates nothing |
-| `NotesListFeatureTests` | 7 | Empty list on first launch; create dialog options; dismiss dialog; type labels; filter by type; sort by title; filter after adding a note |
+| `TextNoteTests` | 3 | Creating a text note and seeing it in the list; content is the same when reopened; note is still there after restarting the app |
+| `TodoListTests` | 8 | Items are added in order and start unticked; list shows as TODO with a preview; ticking and unticking; ticks are saved and survive a restart; preview shows only the first 3 items |
+| `EditDeleteTests` | 9 | Editing a note in place (no duplicate); edited note moves to the top; Back throws away changes; clearing content; renaming a list and adding items; changing ticks; deleting a note and a to-do item |
+| `ValidationTests` | 14 | Empty or spaces-only titles are rejected with "Title cannot be empty" (notes and lists); fixing the title lets you save; text is trimmed; 200-character title; duplicate titles; blank to-do items are ignored; an empty list can be saved; Back creates nothing |
+| `NotesListFeatureTests` | 7 | Empty list on first launch; create dialog; closing the dialog; type labels; filtering by type; sorting by title; filter after adding a note |
+| `EdgeCaseTests` | 6 | Rotating while editing; filter after opening a note and coming back; sorting with capital and small letters; double-tapping Save; a 25-item to-do list; sending the app to the background while typing |
 
 ---
 
-## Design decisions
+## Why I did it this way
 
-- **Page Object Model:** locators (resource-ids) live only in `pages/`; tests read like steps.
-- **Independent tests:** `BaseTest` runs `mobile: clearApp` before every test, so each test starts
-  with an empty app and can run alone or in any order.
-- **Explicit waits only:** no `Thread.sleep`; tests wait for the exact element or state they expect.
-- **Empty text fields:** UiAutomator reports a field's *hint* as its text when empty
-  ("Note Title"), so page objects convert that back to `""`.
-- **Error message popup:** Android shows "Title cannot be empty" in a separate popup only while
-  the field is focused. Tests tap the field and enable Appium's `enableMultiWindows` setting to read it.
-- **Keyboard:** hidden before tapping Save, because it covers the Save button.
+- **Page Object Model:** all the element locators live in `pages/`, so the tests read like a list of steps.
+- **Every test stands alone:** before each test, `BaseTest` wipes the app's data. Each test starts with an empty app, so tests can run alone or in any order.
+- **No `Thread.sleep`:** the tests wait for the exact thing they need.
+- **Empty text fields:** when a field is empty, UiAutomator gives back its hint ("Note Title") as the text. The page objects turn that back into an empty string.
+- **The error message:** "Title cannot be empty" appears in a separate popup, and only while the field is focused. The tests tap the field and turn on Appium's `enableMultiWindows` setting to be able to read it.
+- **Keyboard:** I hide it before tapping Save, because it covers the button.
 
 ---
 
-## Known defects found in the app
+## Bugs I found in the app
 
-These tests are tagged `known-defect` and **fail on purpose**: they document missing or broken app features.
+These tests are tagged `known-defect`. They fail on purpose, because they show something that is missing or broken in the app, not a problem in the tests.
 
-| Test | Defect |
+| Test | What goes wrong |
 |---|---|
-| `deleteTextNote` | There is no way to delete a note (no button, swipe or long-press menu). |
-| `deleteTodoItem` | There is no way to delete a to-do item (the delete button is commented out in the app). |
-| `filter_staysOnAfterAddingNote` | With "Show Todo Lists Only" on, a newly added text note sometimes still appears. Intermittent. |
+| `deleteTextNote` | There is no way to delete a note. No button, no swipe, no long-press menu. |
+| `deleteTodoItem` | There is no way to delete a to-do item. The delete button is commented out in the app. |
+| `filter_staysOnAfterAddingNote` | With "Show Todo Lists Only" turned on, a new text note sometimes still shows up. It doesn't happen every time. |
+| `rotateWhileEditing_keepsUnsavedText` | If you rotate the phone while editing a saved note, what you typed is lost and the old saved text comes back. |
+| `sortByTitle_ignoresCase` | "Sort by Title" treats capital and small letters differently. You get `Mango, Zebra, apple` instead of `apple, Mango, Zebra`. |
+| `longTodoList_tickDoesNotJumpToOtherItems` | In a long list (I used 25 items), ticking Item 1 mixes up the rows. Other items show as ticked, and some rows show the wrong text. It only happens when the list is longer than the screen. |
 
-**Expected result of a full run:** about 38–39 passed, 2–3 failed (only the known defects above).
+In a full run I expect about 41 or 42 tests to pass and 5 or 6 to fail, and the failures should only be the ones in this table. The exact number can change because `filter_staysOnAfterAddingNote` is intermittent.
 
 ---
 
-## Troubleshooting
+## If something goes wrong
 
-| Error | Cause / fix |
+| Error | What it usually means |
 |---|---|
-| `SessionNotCreatedException ... app does not exist` | APK not at `app/app-debug.apk` |
-| `Connection refused` / `Could not start a new session` | Appium isn't running (Terminal 2) |
-| `Could not find a connected Android device` | Emulator not started; check `adb devices` |
-| `Error communicating with the remote browser. It may have died` | Emulator or Appium closed mid-run, or the PC slept; restart both and run again |
-| `release version 17 not supported` | Maven is using a broken or very new JDK; run `java -version` and point `JAVA_HOME` to a JDK 17–23 |
-| `uiautomator2 cannot be installed ... requires ^4.0.0` | Install the Appium 2 compatible driver: `appium driver install uiautomator2@3.10.0` |
-| Red errors everywhere in VS Code | `Ctrl+Shift+P` → **Java: Clean Java Language Server Workspace** |
+| `SessionNotCreatedException ... app does not exist` | The APK isn't at `app/app-debug.apk` |
+| `Connection refused` or `Could not start a new session` | Appium isn't running (Terminal 2) |
+| `Could not find a connected Android device` | The emulator isn't started. Check `adb devices` |
+| `Error communicating with the remote browser. It may have died` | The emulator or Appium closed during the run, or the laptop went to sleep. Restart both and run again |
+| `release version 17 not supported` | Maven is picking a broken or very new JDK. Run `java -version` and point `JAVA_HOME` to JDK 17 to 23 |
+| `uiautomator2 cannot be installed ... requires ^4.0.0` | Install the driver that works with Appium 2: `appium driver install uiautomator2@3.10.0` |
+| Red errors everywhere in VS Code | Press `Ctrl+Shift+P` and run **Java: Clean Java Language Server Workspace** |
 
 ---
 
 ## License
 
-The test automation code is licensed under the [MIT License](LICENSE).
-The application under test (`app-debug.apk`) is not covered by this license and belongs to its owner.
+The test code is under the [MIT License](LICENSE). The app being tested (`app-debug.apk`) is not covered by it and belongs to its owner.

@@ -3,6 +3,7 @@ package pages;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 
 public class TextNotePage extends BasePage {
     private final By titleField = id("noteNameEditText");
@@ -43,6 +44,17 @@ public class TextNotePage extends BasePage {
 
     public NotesListPage save() {
         tapSave();
+        return new NotesListPage(driver).waitUntilLoaded();
+    }
+
+    // Taps SAVE twice, really fast, like an impatient user would.
+  
+    public NotesListPage doubleTapSave() {
+        hideKeyboard();
+        WebElement save = visible(saveButton);
+        driver.executeScript("mobile: doubleClickGesture", java.util.Map.of(
+                "elementId", ((org.openqa.selenium.remote.RemoteWebElement) save).getId()));
+        driver.activateApp("com.example.myapp");
         return new NotesListPage(driver).waitUntilLoaded();
     }
 
