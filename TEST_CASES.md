@@ -24,7 +24,7 @@ I also added a few more cases on my own: list features like filter and sort (TC-
 Status column: **Pass** means the app works as expected. **Fail (bug)** means the test found a real problem in the app, so it fails on purpose. Those tests are tagged `known-defect`.
 
 
-## Scenario 1 - Create a text note (required)
+## Scenario 1 - Create a text note 
 
 Class: `TextNoteTests`
 
@@ -35,7 +35,7 @@ Class: `TextNoteTests`
 | TC-03 | Note is still there after restarting the app | Create a note, close the app, open it again | persisting / keeping this | Note is still in the list | Pass |
 
 
-## Scenario 2 - Create a to-do list with multiple items (required)
+## Scenario 2 - Create a to-do list with multiple items 
 
 Class: `TodoListTests`. Most tests use the same three items: Buy maggi, Call vishal, Pay rent.
 
@@ -47,7 +47,7 @@ Class: `TodoListTests`. Most tests use the same three items: Buy maggi, Call vis
 | TC-11 | Preview only shows the first 3 items | Save a list with 5 items, look at the card on the home screen | One to Five | Preview shows One, Two, Three only | Pass |
 
 
-## Scenario 3 - Mark items as completed (required)
+## Scenario 3 - Mark items as completed 
 
 Class: `TodoListTests`
 
@@ -59,7 +59,7 @@ Class: `TodoListTests`
 | TC-10 | Unticking an item is saved too | Tick Buy maggi and save, reopen, untick it and save, reopen | Toggle | Nothing is ticked at the end | Pass |
 
 
-## Scenario 4 - Edit and delete (required)
+## Scenario 4 - Edit and delete 
 
 Class: `EditDeleteTests`
 
@@ -85,7 +85,7 @@ Class: `EditDeleteTests`
 Note: in this app swiping or long pressing a note just opens it, so TC-19 goes back to the list before checking. Otherwise it would look like the note was deleted because the note editor doesn't show the list.
 
 
-## Scenario 5 - Validation and error messages (required)
+## Scenario 5 - Validation and error messages 
 
 Class: `ValidationTests`
 
@@ -114,7 +114,7 @@ Class: `ValidationTests`
 | TC-33 | Extra spaces are removed from items | Add an item with spaces around it | "   padded item   " | Item is saved as padded item | Pass |
 
 
-## Extra - List features (not required)
+## Extra - List features 
 
 Class: `NotesListFeatureTests`
 
@@ -129,7 +129,7 @@ Class: `NotesListFeatureTests`
 | TC-41 | Filter stays on after adding a note | Turn on Show Todo Lists Only, then add a text note | New text note should not show | Fail (bug) - happens sometimes, the filter resets and the note shows |
 
 
-## Extra - Edge cases (not required)
+## Extra - Edge cases 
 
 Class: `EdgeCaseTests`. After each of these tests the phone is turned back to portrait.
 
