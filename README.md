@@ -12,6 +12,13 @@ The app lets you create text notes and to-do lists, edit them, filter and sort t
 
 While writing the tests I found a few bugs in the app itself. They are listed in [Bugs I found in the app](#bugs-i-found-in-the-app).
 
+> 📋 **Functional test cases:** [TEST_CASES.md](TEST_CASES.md) lists all 47 test cases with steps, test data and expected results, mapped to the five required scenarios:
+> 1. Create a new text note and verify the content is saved and displayed correctly
+> 2. Create a new to-do list with multiple checklist items
+> 3. Mark to-do list items as completed and validate their checked state
+> 4. Edit and delete existing notes and to-do list items
+> 5. Validate input restrictions, empty fields and error messages
+
 ---
 
 ## What you need
